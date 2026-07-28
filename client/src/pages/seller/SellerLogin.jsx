@@ -114,7 +114,7 @@ const SellerLogin = () => {
             </form>
 
             <p className="text-center text-xs text-gray-400 mt-6">
-              Demo: <span className="font-semibold text-gray-600">seller@freshmart.com</span> / <span className="font-semibold text-gray-600">seller123</span>
+              Demo seller credentials — contact admin for access.
             </p>
           </div>
         </div>
