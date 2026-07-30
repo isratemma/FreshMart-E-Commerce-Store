@@ -24,7 +24,8 @@ await connectCloudinary()
 
 const allowedOrigins = [
   'http://localhost:5173',
-  process.env.CLIENT_URL, // add your production frontend URL
+  'https://freshmart-api-vpwy.onrender.com',
+  process.env.CLIENT_URL,
 ].filter(Boolean);
 
 app.use(express.json());
