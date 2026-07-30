@@ -5,10 +5,20 @@ import User from '../models/Users.js';
 const isProd = process.env.NODE_ENV === 'production';
 
 const cookieOptions = {
-  httpOnly: true,                          // JS cannot access cookie
-  secure: isProd,                          // HTTPS only in production
-  sameSite: isProd ? 'none' : 'strict',   // 'none' needed for cross-origin in prod, 'strict' in dev
-  maxAge: 7 * 24 * 60 * 60 * 1000,        // 7 days
+  httpOnly: true,                           // JS cannot access — prevents XSS token theft
+  secure: isProd,                           // HTTPS only in production
+  sameSite: isProd ? 'none' : 'strict',    // 'none' for cross-origin prod, 'strict' blocks CSRF in dev
+  maxAge: 7 * 24 * 60 * 60 * 1000,         // 7 days expiry
+  path: '/',                                // available across all paths
+};
+
+// Shorter-lived cookie for seller (more sensitive)
+const sellerCookieOptions = {
+  httpOnly: true,
+  secure: isProd,
+  sameSite: isProd ? 'none' : 'strict',
+  maxAge: 24 * 60 * 60 * 1000,             // 1 day — seller sessions expire faster
+  path: '/',
 };
 
 // POST /api/user/register
@@ -52,8 +62,8 @@ export const login = async (req, res) => {
 
 // POST /api/user/logout
 export const logout = (req, res) => {
-  res.clearCookie('userToken');
-  res.clearCookie('sellerToken'); // also clear seller cookie on customer logout
+  res.clearCookie('userToken',   { ...cookieOptions,       maxAge: 0 });
+  res.clearCookie('sellerToken', { ...sellerCookieOptions, maxAge: 0 });
   res.json({ success: true, message: 'Logged out' });
 };
 
@@ -128,8 +138,8 @@ export const sellerLogin = (req, res) => {
     if (email !== SELLER_EMAIL || password !== SELLER_PASS)
       return res.json({ success: false, message: 'Invalid seller credentials' });
 
-    const token = jwt.sign({ isSeller: true }, process.env.JWT_SECRET, { expiresIn: '7d' });
-    res.cookie('sellerToken', token, cookieOptions);
+    const token = jwt.sign({ isSeller: true }, process.env.JWT_SECRET, { expiresIn: '1d' });
+    res.cookie('sellerToken', token, sellerCookieOptions);
     res.json({ success: true });
   } catch (err) {
     res.json({ success: false, message: err.message });
@@ -138,6 +148,6 @@ export const sellerLogin = (req, res) => {
 
 // POST /api/user/seller-logout
 export const sellerLogout = (req, res) => {
-  res.clearCookie('sellerToken');
+  res.clearCookie('sellerToken', { ...sellerCookieOptions, maxAge: 0 });
   res.json({ success: true });
 };
