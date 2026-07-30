@@ -2,7 +2,7 @@ import { footerLinks } from '../assets/assets';
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-900 text-gray-400">
+    <footer className="bg-gray-700 text-gray-400">
       <div className="px-6 md:px-16 lg:px-24 xl:px-32 py-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
 
         {/* Brand */}
