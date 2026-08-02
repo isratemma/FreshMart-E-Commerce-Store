@@ -83,6 +83,7 @@ const Checkout = () => {
         setOrders((prev) => [newOrder, ...prev]);
         setConfirmedOrder(newOrder);
         await clearCart();
+        setToast({ type: 'success', title: '🎉 Order Placed!', message: `Your order #${data.order._id.slice(-6).toUpperCase()} is confirmed. Delivered in 30 mins!` });
         setPlaced(true);
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
