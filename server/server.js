@@ -24,7 +24,7 @@ await connectCloudinary()
 
 const allowedOrigins = [
   'http://localhost:5173',
-  'https://freshmart-api-vpwy.onrender.com',
+  'https://fresh-mart-e-commerce-store.vercel.app',
   process.env.CLIENT_URL,
 ].filter(Boolean);
 
